@@ -1,0 +1,1 @@
+streamlit==1.44.0\npandas==2.2.0\nopenpyxl==3.1.5\nplotly==6.0.1\nextra-streamlit-components==0.1.60\nstreamlit-authenticator==0.2.3\nsqlite3-api==0.1.0
