@@ -8,5 +8,5 @@
 // Leaving these empty makes the app fall back to local-only mode
 // (state lives in this browser's localStorage, no sync with friends).
 
-window.SUPABASE_URL = "";
-window.SUPABASE_ANON_KEY = "";
+window.SUPABASE_URL = "https://duxgkbnrsucigtanpzag.supabase.co";
+window.SUPABASE_ANON_KEY = "sb_publishable_88ECBdnFyYxacuPdfq4rWA_9dKK-ZOJ";
