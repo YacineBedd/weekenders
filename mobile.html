@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Weekender — Mobile preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(1000px 600px at 30% 0%, oklch(0.95 0.04 60 / 0.5), transparent 60%),
+      radial-gradient(800px 500px at 110% 90%, oklch(0.94 0.04 35 / 0.4), transparent 60%),
+      oklch(0.95 0.012 80);
+    font-family: "Geist", system-ui, sans-serif;
+    color: oklch(0.20 0.008 50);
+    display: grid;
+    place-items: start center;
+    padding: 60px 24px 80px;
+    box-sizing: border-box;
+  }
+  .stage {
+    width: 100%;
+    max-width: 1180px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  .blurb { max-width: 360px; }
+  .eyebrow {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: oklch(0.55 0.006 60);
+  }
+  .blurb h1 {
+    font-family: "Instrument Serif", serif;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    margin: 12px 0 16px;
+  }
+  .blurb h1 em { font-style: italic; }
+  .blurb p {
+    font-size: 15px;
+    line-height: 1.55;
+    color: oklch(0.38 0.008 50);
+    margin: 0 0 14px;
+  }
+  .ctrl {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: oklch(0.55 0.006 60);
+  }
+  .chip {
+    appearance: none;
+    background: oklch(0.99 0.008 80);
+    border: 1px solid oklch(0.86 0.012 70);
+    color: oklch(0.38 0.008 50);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-family: "JetBrains Mono", monospace;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .chip:hover { border-color: oklch(0.20 0.008 50); }
+  .chip.on {
+    background: oklch(0.20 0.008 50);
+    color: oklch(0.99 0.008 80);
+    border-color: oklch(0.20 0.008 50);
+  }
+  .right-side {
+    text-align: right;
+  }
+  .right-side .blurb {
+    margin-left: auto;
+  }
+  .open-app {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: oklch(0.58 0.17 35);
+    color: oklch(0.99 0.008 80);
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 12px;
+  }
+  .open-app:hover { transform: translateY(-1px); }
+  iframe {
+    border: 0;
+    width: 100%;
+    height: 100%;
+    background: oklch(0.97 0.012 80);
+  }
+  .device-shell {
+    border-radius: 48px;
+    overflow: hidden;
+    position: relative;
+    box-shadow:
+      0 40px 80px rgba(0,0,0,0.18),
+      0 0 0 1px rgba(0,0,0,0.12),
+      0 0 0 12px oklch(0.18 0.005 50),
+      0 0 0 13px oklch(0.30 0.008 50);
+    background: #000;
+    transition: width 0.25s ease, height 0.25s ease;
+  }
+  .island {
+    position: absolute;
+    top: 11px; left: 50%;
+    transform: translateX(-50%);
+    width: 126px; height: 37px;
+    border-radius: 24px;
+    background: #000;
+    z-index: 50;
+    pointer-events: none;
+  }
+  .device-shell.landscape .island {
+    top: 50%; left: 11px;
+    transform: translateY(-50%);
+    width: 37px; height: 126px;
+  }
+  .home-indicator {
+    position: absolute;
+    bottom: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 139px; height: 5px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.85);
+    z-index: 60;
+    pointer-events: none;
+  }
+  .status-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 54px;
+    z-index: 40;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 18px 32px 0;
+    box-sizing: border-box;
+    pointer-events: none;
+    font-family: -apple-system, system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    color: oklch(0.20 0.008 50);
+    background: linear-gradient(180deg, oklch(0.97 0.012 80 / 0.95), oklch(0.97 0.012 80 / 0));
+  }
+  .device-shell.landscape .status-bar { display: none; }
+  .status-icons { display: flex; align-items: center; gap: 5px; }
+  .battery {
+    width: 26px; height: 12px; border: 1.2px solid currentColor;
+    border-radius: 3px; position: relative; opacity: 0.9;
+  }
+  .battery::after {
+    content: ''; position: absolute; right: -3px; top: 3px;
+    width: 2px; height: 4px; border-radius: 0 1px 1px 0; background: currentColor;
+  }
+  .battery::before {
+    content: ''; position: absolute; left: 1px; top: 1px; bottom: 1px;
+    width: 78%; background: currentColor; border-radius: 1.5px;
+  }
+  @media (max-width: 980px) {
+    .stage { grid-template-columns: 1fr; }
+    .right-side { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="blurb">
+    <div class="eyebrow">Mobile preview</div>
+    <h1>Pocket-sized <em>weekenders.</em></h1>
+    <p>The full app, exactly as it lives on a phone. Same data, same games, same wishlist. Designed to feel native at any width.</p>
+
+    <div class="ctrl">
+      <span class="label">Device size</span>
+      <div class="row" id="size-row">
+        <button class="chip on" data-w="390" data-h="844">iPhone 15</button>
+        <button class="chip" data-w="430" data-h="932">15 Pro Max</button>
+        <button class="chip" data-w="375" data-h="812">iPhone SE+</button>
+      </div>
+      <span class="label" style="margin-top:10px">Orientation</span>
+      <div class="row" id="orient-row">
+        <button class="chip on" data-o="portrait">↕ Portrait</button>
+        <button class="chip" data-o="landscape">↔ Landscape</button>
+      </div>
+      <span class="label" style="margin-top:10px">Start on</span>
+      <div class="row" id="tab-row">
+        <button class="chip on" data-tab="home">Home</button>
+        <button class="chip" data-tab="slots">Slots</button>
+        <button class="chip" data-tab="roulette">Roulette</button>
+        <button class="chip" data-tab="tiers">Tiers</button>
+        <button class="chip" data-tab="log">Log</button>
+      </div>
+    </div>
+    <a href="Weekender.html" class="open-app">Open full app ↗</a>
+  </div>
+
+  <div id="device-stage">
+    <!-- device built dynamically -->
+  </div>
+
+  <div class="right-side">
+    <div class="blurb" style="text-align:left">
+      <div class="eyebrow">Notes</div>
+      <h1 style="font-size:36px">A real <em>iframe</em>, not a screenshot.</h1>
+      <p>Tap, scroll, spin, swipe. All gestures work. The phone-width media query in the stylesheet kicks in below 820px — nav wraps, the roulette stack collapses, tier rows tighten.</p>
+      <p>Try Slots — even at 390px the reels stay readable.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const stage = document.getElementById('device-stage');
+
+  function build(w, h, tab, orient) {
+    const params = new URLSearchParams({ tab: tab || 'home' });
+    const isLandscape = orient === 'landscape';
+    const fw = isLandscape ? h : w;
+    const fh = isLandscape ? w : h;
+    stage.innerHTML = `
+      <div class="device-shell ${isLandscape ? 'landscape' : ''}" style="width:${fw}px;height:${fh}px">
+        <div class="island"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.6"/><rect x="5" y="5" width="3" height="6" rx="0.6"/><rect x="10" y="2" width="3" height="9" rx="0.6"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 4 Q8 -1 15 4"/><path d="M3.5 6.5 Q8 3 12.5 6.5"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/></svg>
+            <span class="battery"></span>
+          </div>
+        </div>
+        <iframe src="Weekender.html?${params.toString()}" title="Weekender mobile"></iframe>
+      </div>
+    `;
+  }
+
+  let curW = 390, curH = 844, curTab = 'home', curOrient = 'portrait';
+  build(curW, curH, curTab, curOrient);
+
+  document.getElementById('size-row').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    document.querySelectorAll('#size-row .chip').forEach(c => c.classList.remove('on'));
+    b.classList.add('on');
+    curW = parseInt(b.dataset.w);
+    curH = parseInt(b.dataset.h);
+    build(curW, curH, curTab, curOrient);
+  });
+  document.getElementById('orient-row').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    document.querySelectorAll('#orient-row .chip').forEach(c => c.classList.remove('on'));
+    b.classList.add('on');
+    curOrient = b.dataset.o;
+    build(curW, curH, curTab, curOrient);
+  });
+  document.getElementById('tab-row').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    document.querySelectorAll('#tab-row .chip').forEach(c => c.classList.remove('on'));
+    b.classList.add('on');
+    curTab = b.dataset.tab;
+    build(curW, curH, curTab, curOrient);
+  });
+</script>
+</body>
+</html>
