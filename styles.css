@@ -731,4 +731,34 @@ a { color: inherit; }
   .hero .lede { display: none; }
   .hero .row { margin-top: 8px !important; gap: 6px !important; }
   .hero .btn-lg { padding: 8px 14px; font-size: 13px; }
+
+  /* Compact nav: one scrollable row instead of three wrapped rows. */
+  .nav {
+    padding: 6px 12px !important;
+    margin: 0 -16px 14px !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+    align-items: center;
+  }
+  .brand { gap: 6px; flex-shrink: 0; }
+  .brand-mark { font-size: 18px !important; }
+  .brand-meta { display: none; }
+  .tabs {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 2px !important;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+    flex-shrink: 0;
+  }
+  .tab .num { display: none; }
+  .who { padding: 2px 2px 2px 8px !important; flex-shrink: 0; }
+  .who-label { display: none; }
+  .who-name { font-size: 12px !important; }
+  .avatar { width: 22px !important; height: 22px !important; font-size: 10px !important; }
 }
