@@ -722,3 +722,13 @@ a { color: inherit; }
   .entry { grid-template-columns: 1fr; gap: 4px; }
   .entry .e-rating { text-align: left; }
 }
+
+@media (max-width: 600px) {
+  .hero { padding: 6px 0 4px !important; }
+  .hero .h-display { font-size: 26px !important; margin-top: 4px !important; margin-bottom: 6px !important; line-height: 1.1; }
+  .hero .h-display br { display: none; }
+  .hero .h-display em { font-size: 22px; }
+  .hero .lede { display: none; }
+  .hero .row { margin-top: 8px !important; gap: 6px !important; }
+  .hero .btn-lg { padding: 8px 14px; font-size: 13px; }
+}
